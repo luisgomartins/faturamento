@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Controle - Faturamento</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos específicos para a página de admin */
+        .admin-container { max-width: 500px; margin: 2rem auto; padding: 2rem; background: var(--card-bg); border-radius: 12px; box-shadow: var(--shadow); text-align: left; }
+        .admin-container h1 { text-align: center; font-size: 2rem; margin-bottom: 2rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; font-size: 1.2rem; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; background-color: #fff; }
+        button { width: 100%; padding: 15px; font-size: 1.2rem; font-weight: 600; color: white; background-color: var(--primary-color); border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.3s ease; }
+        button:hover { background-color: #3a7ac8; }
+        #feedback-message { text-align: center; margin-top: 1rem; font-weight: 600; height: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        <h1>Atualizar Painel</h1>
+        <form id="update-form">
+            
+            <div class="form-group">
+                <label for="faturamento">Novo Faturamento Atual (deixe em branco para não alterar)</label>
+                <input type="number" id="faturamento" name="faturamento" step="0.01" placeholder="Ex: 215000.50">
+            </div>
+
+            <div class="form-group">
+                <label for="semana-select">Selecionar Semana para Exibição</label>
+                <select id="semana-select" name="semana">
+                    <option value="1">Semana 1</option>
+                    <option value="2">Semana 2</option>
+                    <option value="3">Semana 3</option>
+                    <option value="4">Semana 4</option>
+                    <option value="5">Semana 5</option>
+                </select>
+            </div>
+
+            <button type="submit">Atualizar Painel</button>
+        </form>
+        <p id="feedback-message"></p>
+    </div>
+
+    <script>
+        const form = document.getElementById('update-form');
+        const faturamentoInput = document.getElementById('faturamento');
+        const semanaSelect = document.getElementById('semana-select');
+        const feedbackMessage = document.getElementById('feedback-message');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const faturamentoValue = faturamentoInput.value;
+            const semanaValue = semanaSelect.value;
+            
+            // Monta o objeto de dados apenas com as informações que foram preenchidas
+            const dataToSend = {};
+            if (faturamentoValue !== '') {
+                dataToSend.novoValor = parseFloat(faturamentoValue);
+            }
+            if (semanaValue) {
+                dataToSend.semana = parseInt(semanaValue, 10);
+            }
+
+            // Se nada foi preenchido, não faz nada
+            if (Object.keys(dataToSend).length === 0) {
+                feedbackMessage.textContent = 'Preencha ao menos um campo para atualizar.';
+                feedbackMessage.style.color = 'orange';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/update-faturamento', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dataToSend)
+                });
+
+                if (!response.ok) throw new Error('Falha ao enviar os dados.');
+
+                const result = await response.json();
+                feedbackMessage.textContent = result.message;
+                feedbackMessage.style.color = 'green';
+                faturamentoInput.value = ''; // Limpa apenas o campo de valor
+
+            } catch (error) {
+                feedbackMessage.textContent = 'Erro ao se comunicar com o servidor.';
+                feedbackMessage.style.color = 'red';
+                console.error(error);
+            }
+
+            setTimeout(() => { feedbackMessage.textContent = ''; }, 3000);
+        });
+    </script>
+</body>
+</html>

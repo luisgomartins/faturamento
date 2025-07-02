@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medidor de Faturamento - Julho</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+    <div id="confetti-container"></div>
+    <div class="container">
+        <h1>Faturamento de Julho</h1>
+
+        <div class="info-cards glass-card">
+            <div class="card">
+                <h2>Meta da Semana (<span id="semana-atual-numero">1</span>)</h2>
+                <p id="meta-semana-valor">R$ 0,00</p>
+            </div>
+            <div class="card">
+                <h2>Meta Final do Mês</h2>
+                <p id="meta-final-valor">R$ 0,00</p>
+            </div>
+        </div>
+
+        <div class="thermometer-container glass-card">
+            <div class="thermometer">
+                <div class="mercury" id="mercurio">
+                    <div class="liquid-effect"></div>
+                </div>
+                
+            </div>
+            <i class="fa-solid fa-trophy" id="trophy"></i>
+            <div class="goal-markers">
+            </div>
+        </div>
+
+        <div id="congrats-modal">
+            <div class="modal-content">
+                <h2>Parabéns!</h2>
+                <p>Meta do mês alcançada!</p>
+                <i class="fa-solid fa-party-horn"></i>
+            </div>
+        </div>
+
+        <div class="faturamento-atual-card glass-card">
+            <h3>Faturamento Atual</h3>
+            <p id="faturamento-atual-valor">R$ 0,00</p>
+        </div>
+
+
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
+
+</html>

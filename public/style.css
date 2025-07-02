@@ -1,0 +1,350 @@
+/* --- 1. NOVA PALETA DE CORES E FONTES --- */
+:root {
+    --bg-color-start: #231d2a;
+    --bg-color-end: #544059;
+    --card-bg: rgba(0, 0, 0, 0.363);
+    /* Cor base para o efeito vidro */
+    --text-color: #ff920e;
+    --primary-color: #ffc124;
+    /* Um roxo/lilás vibrante */
+    --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    --border-color: rgba(255, 255, 255, 0.18);
+    --mercury-green: #00b95f;
+    --mercury-yellow: #ffea00;
+    --mercury-red: #ff1100;
+}
+
+/* --- 2. FUNDO ANIMADO E ESTILOS GERAIS --- */
+@keyframes background-pan {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+
+    /* A mágica do fundo animado */
+    background: linear-gradient(135deg, var(--bg-color-start), var(--bg-color-end));
+    background-size: 400% 400%;
+    animation: background-pan 15s ease infinite;
+}
+
+/* --- 4. ANIMAÇÕES DE ENTRADA --- */
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    text-align: center;
+    animation: fade-in-up 0.8s ease-out forwards;
+}
+
+h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.info-cards {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* --- 3. EFEITO "GLASSMORPHISM" E MICRO-INTERAÇÕES --- */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    /* Para compatibilidade */
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    padding: 25px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Transição suave para hover */
+}
+
+/* Efeito de hover nos cards */
+.glass-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.45);
+}
+
+.card {
+    flex-grow: 1;
+}
+
+.card h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.2rem;
+    font-weight: 300;
+    /* Mais leve */
+}
+
+.card p {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+    color: white;
+    /* Cor do valor destacada */
+}
+
+.faturamento-atual-card {
+    margin: 2rem auto;
+    width: 100%;
+}
+
+.faturamento-atual-card h3 {
+    margin: 0 0 10px 0;
+    font-weight: 300;
+}
+
+.faturamento-atual-card p {
+    margin: 0;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-shadow: 0 0 15px var(--primary-color);
+}
+
+/* Termômetro com o mesmo efeito */
+.thermometer-container {
+    height: 300px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.thermometer {
+    margin: auto;
+    height: 150px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    /* Fundo mais escuro para o termômetro */
+    border: 1px solid var(--border-color);
+    border-radius: 250px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.mercury {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0%;
+    border-radius: 15px 0 0 15px;
+    /* Animação mais orgânica com cubic-bezier */
+    transition: width 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), background-color 1.5s ease;
+    display: flex;
+    align-items: center;
+}
+
+.liquid-effect {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.1) 100%);
+    border-radius: 15px 0 0 15px;
+}
+
+.mercury.green {
+    background-color: var(--mercury-green);
+}
+
+.mercury.yellow {
+    background-color: var(--mercury-yellow);
+}
+
+.mercury.red {
+    background-color: var(--mercury-red);
+}
+
+/* Estilos dos Marcadores (ajustados para o novo design) */
+.goal-markers {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin-top: 5px;
+}
+
+.marker {
+    position: absolute;
+    bottom: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.marker::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 1px;
+}
+
+.marker span {
+    padding-top: 15px;
+}
+
+/* ... todo o CSS anterior continua o mesmo até o final ... */
+/* Adicione estas novas seções no final do seu arquivo CSS */
+
+/* --- ESTILOS DA CELEBRAÇÃO --- */
+
+/* 1. Troféu */
+#trophy {
+    position: absolute;
+    right: 0; /* Alinha com a borda direita do container */
+    top: 150px; /* Posição vertical para centralizar com a barra */
+    transform: translateY(-50%);
+    font-size: 75px;
+    color: #ffbf00;
+    opacity: 0.2;
+    filter: brightness();
+    transition: all 0.5s ease-in-out;
+}
+
+#trophy.active {
+    opacity: 1;
+    filter: grayscale(0%);
+    text-shadow: 0 0 15px #ffd700, 0 0 25px #ffc400;
+    animation: trophy-bounce 1s ease-in-out infinite alternate;
+}
+
+@keyframes trophy-bounce {
+    from {
+        transform: translateY(-50%) scale(1);
+    }
+
+    to {
+        transform: translateY(-55%) scale(1.1);
+    }
+}
+
+/* 2. Modal de Parabéns */
+#congrats-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 1250px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    /* Não pode ser clicado quando invisível */
+    transition: opacity 0.5s ease;
+}
+
+#congrats-modal.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    transform: scale(0.7);
+    transition: transform 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    /* Efeito de "pulo" */
+}
+
+#congrats-modal.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-content h2 {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin: 0 0 10px 0;
+}
+
+.modal-content p {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+/* 3. Confetes */
+#confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+    overflow: hidden;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 20px;
+    background-color: #f1c40f;
+    /* Cor padrão */
+    opacity: 0;
+    top: -20px;
+    /* Começa fora da tela, em cima */
+    animation: confetti-fall 5s linear infinite;
+}
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(0) rotateZ(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(105vh) rotateZ(360deg);
+        opacity: 0;
+    }
+}
