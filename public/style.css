@@ -1,8 +1,6 @@
 /* --- 1. NOVA PALETA DE CORES E FONTES --- */
 :root {
-    --bg-color-start: #231d2a;
-    --bg-color-end: #544059;
-    --card-bg: rgba(0, 0, 0, 0.363);
+    --card-bg: rgba(0, 0, 0, 0.804);
     /* Cor base para o efeito vidro */
     --text-color: #ff920e;
     --primary-color: #ffc124;
@@ -203,11 +201,12 @@ h1 {
 .marker {
     position: absolute;
     bottom: 0;
+    top: -100px; /* Ajuste para a altura do termômetro */
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 0.9rem;
+    font-size: 20px;
     font-weight: 500;
     transform: translateX(-50%);
     color: rgba(255, 255, 255, 0.7);
@@ -216,15 +215,16 @@ h1 {
 .marker::before {
     content: '';
     position: absolute;
-    top: 0;
-    width: 2px;
-    height: 10px;
+    top: -100px; /* Ajuste para a altura do termômetro */
+    width: 5px;
+    height: 50px;
     background-color: rgba(255, 255, 255, 0.7);
     border-radius: 1px;
 }
 
 .marker span {
     padding-top: 15px;
+
 }
 
 /* ... todo o CSS anterior continua o mesmo até o final ... */
