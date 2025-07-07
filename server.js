@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const app = express();
-// Corrigido: A porta precisa usar a variável de ambiente para o deploy
+// A porta precisa usar a variável de ambiente para o deploy
 const PORT = process.env.PORT || 3000; 
 
 // Middlewares
@@ -10,7 +10,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
 // --- CONFIGURAÇÃO E ESTADO DA APLICAÇÃO ---
-const META_FINAL_JULHO = 500000;
+const META_FINAL_JULHO = 7820253; // Meta final de faturamento para julho
 let faturamentoAtual = 0;
 let semanaSelecionada = 1;
 let dadosCompletos = {}; // Objeto para guardar o estado mais recente
@@ -18,13 +18,13 @@ let dadosCompletos = {}; // Objeto para guardar o estado mais recente
 const dataDirPath = path.join(__dirname, 'data');
 const dataFilePath = path.join(dataDirPath, 'data.json');
 
-const diasNoMes = 31;
+const diasNoMes = 23;
 const valorPorDia = META_FINAL_JULHO / diasNoMes;
 const semanasDeJulho = [
-    { semana: 1, dias: 6, dataInicio: '2025-07-01', dataFim: '2025-07-06' },
-    { semana: 2, dias: 7, dataInicio: '2025-07-07', dataFim: '2025-07-13' },
-    { semana: 3, dias: 7, dataInicio: '2025-07-14', dataFim: '2025-07-20' },
-    { semana: 4, dias: 7, dataInicio: '2025-07-21', dataFim: '2025-07-27' },
+    { semana: 1, dias: 4, dataInicio: '2025-07-01', dataFim: '2025-07-06' },
+    { semana: 2, dias: 5, dataInicio: '2025-07-07', dataFim: '2025-07-13' },
+    { semana: 3, dias: 5, dataInicio: '2025-07-14', dataFim: '2025-07-20' },
+    { semana: 4, dias: 5, dataInicio: '2025-07-21', dataFim: '2025-07-27' },
     { semana: 5, dias: 4, dataInicio: '2025-07-28', dataFim: '2025-07-31' }
 ];
 let metaAcumulada = 0;
@@ -137,4 +137,4 @@ app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
     console.log(`Painel principal: http://localhost:${PORT}`);
     console.log(`Painel de controle: http://localhost:${PORT}/admin.html`);
-});
+});''
