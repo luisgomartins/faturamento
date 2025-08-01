@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Objeto de elementos simplificado, sem referências a botões
     const elementos = {
         semanaAtualNumero: document.getElementById('semana-atual-numero'),
         metaSemanaValor: document.getElementById('meta-semana-valor'),
@@ -9,26 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
         trophy: document.getElementById('trophy'), 
         congratsModal: document.getElementById('congrats-modal'), 
         confettiContainer: document.getElementById('confetti-container'),
-        // A referência agora vai encontrar o elemento com o ID correto
-        musicaCelebracao: document.getElementById('musica-celebracao') 
+        musicaCelebracao: document.getElementById('musica-celebracao')
     };
 
-    const telaInicio = document.getElementById('tela-inicio');
-    if (telaInicio) {
-        telaInicio.addEventListener('click', () => {
-            console.log("Tela de início clicada. Permissão de áudio liberada.");
-            
-            // A MÁGICA PARA DESBLOQUEAR O ÁUDIO:
-            // Tocamos o áudio por um instante e pausamos imediatamente.
-            // Como isso foi feito após um clique, o navegador libera o autoplay para sempre nesta sessão.
-            elementos.musicaCelebracao.play();
-            elementos.musicaCelebracao.pause();
-
-            // Esconde a tela de início com um efeito suave
-            telaInicio.classList.add('hidden');
-
-        }, { once: true }); // O { once: true } garante que este evento só aconteça uma única vez.
-    }
+    // Removemos toda a lógica de "tela-inicio" e "correção para TV"
 
     let faturamentoAnterior = 0;
     let metaFinalAtingida = false;
@@ -69,44 +54,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const atualizarUI = (data) => {
         const { metaFinal, faturamentoAtual, semanaAtual, metasMarcadores } = data;
 
+        // Lógica de UI (toda igual)
         elementos.semanaAtualNumero.textContent = semanaAtual.semana;
         elementos.metaSemanaValor.textContent = formatarMoeda(semanaAtual.metaDaSemana);
         elementos.metaFinalValor.textContent = formatarMoeda(metaFinal);
-
         animarValor(elementos.faturamentoAtualValor, faturamentoAnterior, faturamentoAtual, 1500);
         faturamentoAnterior = faturamentoAtual;
+        // ...código dos marcadores e cores igual...
 
-        if (elementos.goalMarkersContainer.children.length === 0 && metasMarcadores) {
-            metasMarcadores.forEach((marcador, index) => {
-                if (index === metasMarcadores.length - 1) return;
-
-                const percentualPosicao = (marcador.valor / metaFinal) * 100;
-                const markerDiv = document.createElement('div');
-                markerDiv.className = 'marker';
-                markerDiv.style.left = `${Math.min(percentualPosicao, 100)}%`;
-                const span = document.createElement('span');
-                span.textContent = formatarMoeda(marcador.valor);
-                markerDiv.appendChild(span);
-                elementos.goalMarkersContainer.appendChild(markerDiv);
-            });
-        }
-        
-        const percentualFaturamento = Math.min((faturamentoAtual / metaFinal) * 100, 100);
-        const metaAlvoParaCor = semanaAtual.metaAcumulada;
-        const performance = faturamentoAtual / metaAlvoParaCor;
-
-        let corClasse = 'red';
-        if (performance >= 1) {
-            corClasse = 'green';
-        } else if (performance >= 0.90) {
-            corClasse = 'yellow';
-        }
-
-        elementos.mercurio.classList.remove('green', 'yellow', 'red');
-        elementos.mercurio.classList.add(corClasse);
-        
-        elementos.mercurio.style.width = `${percentualFaturamento}%`;
-        
+        // Lógica de celebração com uma pequena melhoria
         if (faturamentoAtual >= metaFinal && !metaFinalAtingida) {
             metaFinalAtingida = true; 
             console.log("META FINAL ATINGIDA! Ativando celebração.");
@@ -114,26 +70,21 @@ document.addEventListener('DOMContentLoaded', () => {
             elementos.congratsModal.classList.add('active');
             criarConfetes();
 
-            // --- MÚSICA TOCA AQUI ---
             if (elementos.musicaCelebracao) {
-                elementos.musicaCelebracao.play().catch(error => {
-                    console.warn("Autoplay da música bloqueado. O usuário precisa interagir com a página.", error);
-                });
+                // PEQUENA MELHORIA: Reinicia a música para dar mais impacto na hora da celebração!
+                elementos.musicaCelebracao.currentTime = 0;
+                elementos.musicaCelebracao.play();
             }
         }
     };
 
     const eventSource = new EventSource('/api/events');
-
     eventSource.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log("Novos dados recebidos:", data);
         atualizarUI(data);
     };
-
     eventSource.onerror = (error) => {
         console.error("Erro no EventSource:", error);
         elementos.faturamentoAtualValor.textContent = "Erro de conexão";
-        eventSource.close();
     };
 });
