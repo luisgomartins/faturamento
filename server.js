@@ -10,7 +10,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
 // --- CONFIGURAÇÃO E ESTADO DA APLICAÇÃO ---
-const META_FINAL_JULHO = 7200000; // Meta final de faturamento para julho
+const META_FINAL_JULHO = 7000000; // Meta final de faturamento para julho
 let faturamentoAtual = 0;
 let semanaSelecionada = 1;
 let dadosCompletos = {}; // Objeto para guardar o estado mais recente
