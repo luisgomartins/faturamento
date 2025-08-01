@@ -13,6 +13,23 @@ document.addEventListener('DOMContentLoaded', () => {
         musicaCelebracao: document.getElementById('musica-celebracao') 
     };
 
+    const telaInicio = document.getElementById('tela-inicio');
+    if (telaInicio) {
+        telaInicio.addEventListener('click', () => {
+            console.log("Tela de início clicada. Permissão de áudio liberada.");
+            
+            // A MÁGICA PARA DESBLOQUEAR O ÁUDIO:
+            // Tocamos o áudio por um instante e pausamos imediatamente.
+            // Como isso foi feito após um clique, o navegador libera o autoplay para sempre nesta sessão.
+            elementos.musicaCelebracao.play();
+            elementos.musicaCelebracao.pause();
+
+            // Esconde a tela de início com um efeito suave
+            telaInicio.classList.add('hidden');
+
+        }, { once: true }); // O { once: true } garante que este evento só aconteça uma única vez.
+    }
+
     let faturamentoAnterior = 0;
     let metaFinalAtingida = false;
 
