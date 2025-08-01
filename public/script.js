@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // A CORREÇÃO ESTÁ AQUI:
-    // Adicione as 4 linhas que faltavam para o script encontrar os elementos da celebração.
     const elementos = {
         semanaAtualNumero: document.getElementById('semana-atual-numero'),
         metaSemanaValor: document.getElementById('meta-semana-valor'),
@@ -11,14 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
         trophy: document.getElementById('trophy'), 
         congratsModal: document.getElementById('congrats-modal'), 
         confettiContainer: document.getElementById('confetti-container'),
-        // --- ADICIONADO: Referências para os elementos de música ---
-        musicaCelebracao: document.getElementById('musica-celebracao'),
-        btnMudo: document.getElementById('btn-mudo')
+        // A referência agora vai encontrar o elemento com o ID correto
+        musicaCelebracao: document.getElementById('musica-celebracao') 
     };
 
     let faturamentoAnterior = 0;
     let metaFinalAtingida = false;
-
 
     const formatarMoeda = (valor) => {
         return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -65,9 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (elementos.goalMarkersContainer.children.length === 0 && metasMarcadores) {
             metasMarcadores.forEach((marcador, index) => {
-                if (index === metasMarcadores.length - 1) {
-                    return;
-                }
+                if (index === metasMarcadores.length - 1) return;
 
                 const percentualPosicao = (marcador.valor / metaFinal) * 100;
                 const markerDiv = document.createElement('div');
@@ -106,25 +100,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // --- MÚSICA TOCA AQUI ---
             if (elementos.musicaCelebracao) {
                 elementos.musicaCelebracao.play().catch(error => {
-                    console.warn("Autoplay da música bloqueado. O usuário precisa interagir com a página.");
+                    console.warn("Autoplay da música bloqueado. O usuário precisa interagir com a página.", error);
                 });
             }
         }
     };
-
-    // --- ADICIONADO: Lógica para o botão de mudo ---
-    if (elementos.btnMudo && elementos.musicaCelebracao) {
-        // Exibe o botão apenas se a música começar a tocar
-        elementos.musicaCelebracao.addEventListener('play', () => {
-            elementos.btnMudo.style.display = 'block';
-        });
-
-        elementos.btnMudo.addEventListener('click', () => {
-            const musica = elementos.musicaCelebracao;
-            musica.muted = !musica.muted; // Inverte o estado de mudo
-            elementos.btnMudo.textContent = musica.muted ? 'Ativar Som' : 'Silenciar';
-        });
-    }
 
     const eventSource = new EventSource('/api/events');
 
