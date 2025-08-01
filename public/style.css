@@ -44,40 +44,6 @@ body {
     animation: background-pan 15s ease infinite;
 }
 
-#tela-inicio {
-    position: fixed; /* Cobre a tela inteira */
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(15, 23, 42, 0.9); /* Fundo escuro semi-transparente */
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer; /* Mostra que é clicável */
-    z-index: 9999; /* Garante que ficará por cima de tudo */
-    transition: opacity 0.5s ease; /* Efeito suave de fade-out */
-}
-
-#tela-inicio.hidden {
-    opacity: 0;
-    pointer-events: none; /* Impede cliques depois que estiver invisível */
-}
-
-#tela-inicio .conteudo-inicio {
-    text-align: center;
-    font-family: 'Poppins', sans-serif;
-}
-
-#tela-inicio .conteudo-inicio i {
-    font-size: 5rem;
-    margin-bottom: 20px;
-}
-
-#tela-inicio .conteudo-inicio h1 {
-    font-size: 2.5rem;
-}
 
 /* --- 4. ANIMAÇÕES DE ENTRADA --- */
 @keyframes fade-in-up {
