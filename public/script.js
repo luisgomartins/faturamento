@@ -8,9 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
         faturamentoAtualValor: document.getElementById('faturamento-atual-valor'),
         mercurio: document.getElementById('mercurio'),
         goalMarkersContainer: document.querySelector('.goal-markers'),
-        trophy: document.getElementById('trophy'), // <-- ADICIONADO
-        congratsModal: document.getElementById('congrats-modal'), // <-- ADICIONADO
-        confettiContainer: document.getElementById('confetti-container') // <-- ADICIONADO
+        trophy: document.getElementById('trophy'), 
+        congratsModal: document.getElementById('congrats-modal'), 
+        confettiContainer: document.getElementById('confetti-container'),
+        // --- ADICIONADO: Referências para os elementos de música ---
+        musicaCelebracao: document.getElementById('musica-celebracao'),
+        btnMudo: document.getElementById('btn-mudo')
     };
 
     let faturamentoAnterior = 0;
@@ -44,8 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
             confete.classList.add('confetti');
             confete.style.left = `${Math.random() * 100}vw`;
             confete.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
-            confete.style.animationDuration = `${Math.random() * 3 + 3}s`; // Duração entre 3s e 6s
-            confete.style.animationDelay = `${Math.random() * 5}s`; // Atraso para não cairem todos juntos
+            confete.style.animationDuration = `${Math.random() * 3 + 3}s`;
+            confete.style.animationDelay = `${Math.random() * 5}s`;
             elementos.confettiContainer.appendChild(confete);
         }
     };
@@ -53,18 +56,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const atualizarUI = (data) => {
         const { metaFinal, faturamentoAtual, semanaAtual, metasMarcadores } = data;
 
-        // Atualizar Cards (sem alteração)
         elementos.semanaAtualNumero.textContent = semanaAtual.semana;
         elementos.metaSemanaValor.textContent = formatarMoeda(semanaAtual.metaDaSemana);
         elementos.metaFinalValor.textContent = formatarMoeda(metaFinal);
 
-        // Animar valor do faturamento (sem alteração)
         animarValor(elementos.faturamentoAtualValor, faturamentoAnterior, faturamentoAtual, 1500);
         faturamentoAnterior = faturamentoAtual;
 
         if (elementos.goalMarkersContainer.children.length === 0 && metasMarcadores) {
             metasMarcadores.forEach((marcador, index) => {
-                // Pula a criação do último marcador visual
                 if (index === metasMarcadores.length - 1) {
                     return;
                 }
@@ -79,8 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 elementos.goalMarkersContainer.appendChild(markerDiv);
             });
         }
-
-        // Lógica do Mercúrio (Altura e Cor)
+        
         const percentualFaturamento = Math.min((faturamentoAtual / metaFinal) * 100, 100);
         const metaAlvoParaCor = semanaAtual.metaAcumulada;
         const performance = faturamentoAtual / metaAlvoParaCor;
@@ -94,58 +93,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
         elementos.mercurio.classList.remove('green', 'yellow', 'red');
         elementos.mercurio.classList.add(corClasse);
-
-        // --- MUDANÇA AQUI ---
-        // Em vez de 'height', agora definimos a 'width' do mercúrio
+        
         elementos.mercurio.style.width = `${percentualFaturamento}%`;
-
-        // NOVO: LÓGICA DE CELEBRAÇÃO
+        
         if (faturamentoAtual >= metaFinal && !metaFinalAtingida) {
-            metaFinalAtingida = true; // Ativa a flag para não repetir
+            metaFinalAtingida = true; 
             console.log("META FINAL ATINGIDA! Ativando celebração.");
             elementos.trophy.classList.add('active');
             elementos.congratsModal.classList.add('active');
             criarConfetes();
+
+            // --- MÚSICA TOCA AQUI ---
+            if (elementos.musicaCelebracao) {
+                elementos.musicaCelebracao.play().catch(error => {
+                    console.warn("Autoplay da música bloqueado. O usuário precisa interagir com a página.");
+                });
+            }
         }
     };
 
+    // --- ADICIONADO: Lógica para o botão de mudo ---
+    if (elementos.btnMudo && elementos.musicaCelebracao) {
+        // Exibe o botão apenas se a música começar a tocar
+        elementos.musicaCelebracao.addEventListener('play', () => {
+            elementos.btnMudo.style.display = 'block';
+        });
 
+        elementos.btnMudo.addEventListener('click', () => {
+            const musica = elementos.musicaCelebracao;
+            musica.muted = !musica.muted; // Inverte o estado de mudo
+            elementos.btnMudo.textContent = musica.muted ? 'Ativar Som' : 'Silenciar';
+        });
+    }
 
-    // Conecta-se ao servidor para ouvir os eventos
     const eventSource = new EventSource('/api/events');
 
-    // Quando uma mensagem (um novo dado) chega do servidor...
     eventSource.onmessage = (event) => {
-        // Os dados chegam como uma string, então precisamos convertê-los para JSON
         const data = JSON.parse(event.data);
         console.log("Novos dados recebidos:", data);
         atualizarUI(data);
     };
 
-    document.addEventListener('DOMContentLoaded', function() {
-    const musica = document.getElementById('musica-fundo');
-
-    // Tenta iniciar a música
-    const promise = musica.play();
-
-    if (promise !== undefined) {
-        promise.then(_ => {
-            // Autoplay iniciado com sucesso!
-            console.log("Música de fundo iniciada.");
-        }).catch(error => {
-            // Autoplay foi bloqueado pelo navegador.
-            // Isso geralmente acontece se o usuário ainda não interagiu com a página.
-            console.warn("A reprodução automática foi bloqueada. A música começará quando o usuário clicar na página.");
-
-            // Uma boa prática é iniciar a música no primeiro clique do usuário
-            document.body.addEventListener('click', function() {
-                musica.play();
-            }, { once: true }); // O { once: true } faz com que este evento só aconteça uma vez
-        });
-    }
-});
-
-    // Lida com possíveis erros na conexão
     eventSource.onerror = (error) => {
         console.error("Erro no EventSource:", error);
         elementos.faturamentoAtualValor.textContent = "Erro de conexão";
