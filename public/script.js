@@ -122,6 +122,29 @@ document.addEventListener('DOMContentLoaded', () => {
         atualizarUI(data);
     };
 
+    document.addEventListener('DOMContentLoaded', function() {
+    const musica = document.getElementById('musica-fundo');
+
+    // Tenta iniciar a música
+    const promise = musica.play();
+
+    if (promise !== undefined) {
+        promise.then(_ => {
+            // Autoplay iniciado com sucesso!
+            console.log("Música de fundo iniciada.");
+        }).catch(error => {
+            // Autoplay foi bloqueado pelo navegador.
+            // Isso geralmente acontece se o usuário ainda não interagiu com a página.
+            console.warn("A reprodução automática foi bloqueada. A música começará quando o usuário clicar na página.");
+
+            // Uma boa prática é iniciar a música no primeiro clique do usuário
+            document.body.addEventListener('click', function() {
+                musica.play();
+            }, { once: true }); // O { once: true } faz com que este evento só aconteça uma vez
+        });
+    }
+});
+
     // Lida com possíveis erros na conexão
     eventSource.onerror = (error) => {
         console.error("Erro no EventSource:", error);
